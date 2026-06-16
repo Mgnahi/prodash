@@ -1,0 +1,61 @@
+/* ============================================================
+   index.css
+   ------------------------------------------------------------
+   Global / base styles. This file is imported by main.jsx and
+   applies to the whole document, not any one component.
+
+   Three jobs:
+     1. Reset default browser margins/padding
+     2. Set the dark page background and base font
+     3. Strip default button/anchor styling so our components
+        can style buttons however they want
+   ============================================================ */
+
+/* Universal reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  background: #0a0a0a;
+  color: #ffffff;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* Anchors: inherit color, no underline (we add underline back per-link) */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Buttons: kill the default browser look so our CSS is in full control */
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: inherit;
+}
+
+/* Inputs use the same font as the rest of the page */
+input {
+  font-family: inherit;
+}

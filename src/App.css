@@ -1,0 +1,1432 @@
+/* ============================================================
+   App.css
+   ------------------------------------------------------------
+   ALL styles for the whole app. Organized into sections —
+   use Ctrl+F with the section names to jump around.
+
+   SECTIONS:
+     1.  AUTH PAGES (login, signup)
+     2.  DEV view switcher (top-right dropdown)
+     3.  DASHBOARD SHELL (TopNav, Sidebar, layout)
+     4.  GENERIC PAGE STYLES (titles, panels, cards, badges)
+     5.  DASHBOARD HOME PAGE
+     6.  CALENDAR PAGE
+     7.  ENTRY MODAL
+     8.  REMINDERS PAGE
+     9.  EMAIL LOG PAGE
+     10. SETTINGS PAGE
+     11. SWITCH (the toggle slider used by Modal + Settings)
+
+   Color palette:
+     #0a0a0a  page background
+     #161618  card / panel background
+     #0f0f11  input background
+     #1a1a1d  hover background
+     #7C3AED  purple accent
+     #6d28d9  purple hover
+     #a1a1aa  secondary text
+     #52525b  placeholder text
+   ============================================================ */
+
+
+/* ============================================================
+   1. AUTH PAGES
+   ============================================================ */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.auth-logo-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #7C3AED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+}
+
+.auth-logo-text {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.auth-title-block {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: #a1a1aa;
+}
+
+.text-field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.text-field-label {
+  display: block;
+  font-size: 13px;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+}
+
+.text-field-input {
+  width: 100%;
+  background: #0f0f11;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.text-field-input::placeholder { color: #52525b; }
+.text-field-input:focus { border-color: #7C3AED; }
+
+.forgot-row {
+  text-align: right;
+  margin-top: -4px;
+  margin-bottom: 20px;
+}
+
+.link-purple {
+  color: #7C3AED;
+  font-size: 14px;
+  cursor: pointer;
+}
+.link-purple:hover { text-decoration: underline; }
+
+.btn-primary {
+  width: 100%;
+  background: #7C3AED;
+  color: white;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover { background: #6d28d9; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.divider-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+.divider-text { font-size: 12px; color: #71717a; }
+
+.btn-secondary {
+  width: 100%;
+  background: #0f0f11;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+.btn-secondary:hover { background: #1a1a1d; }
+
+.google-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4285F4;
+  display: inline-block;
+}
+
+.auth-footer {
+  text-align: center;
+  color: #a1a1aa;
+  font-size: 14px;
+  margin-top: 24px;
+}
+
+
+/* ============================================================
+   2. DEV VIEW SWITCHER (top-right dropdown — remove later)
+   ============================================================ */
+
+.dev-view-switcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  background: #161618;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+
+/* ============================================================
+   3. DASHBOARD SHELL (TopNav, Sidebar, layout grid)
+   ============================================================ */
+
+.dashboard-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Top Nav --- */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 20px;
+  background: #161618;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  height: 64px;
+}
+
+.topnav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.topnav-logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #7C3AED;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.topnav-logo-text {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.topnav-search {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+}
+
+.topnav-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.topnav-search-input {
+  width: 100%;
+  background: #0f0f11;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px 12px 8px 36px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.topnav-search-input:focus { border-color: #7C3AED; }
+.topnav-search-input::placeholder { color: #52525b; }
+
+.topnav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.topnav-icon-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s ease;
+}
+.topnav-icon-btn:hover { background: rgba(255, 255, 255, 0.05); }
+
+.topnav-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #EF4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.topnav-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  /* Gradient like the mockup */
+  background: linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Layout grid: sidebar + main --- */
+.dashboard-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 240px;
+  background: #0a0a0a;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #52525b;
+  padding: 8px 12px 4px;
+  text-transform: uppercase;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar-link:hover { background: rgba(255, 255, 255, 0.04); color: white; }
+
+.sidebar-link.active {
+  background: rgba(124, 58, 237, 0.15);
+  color: white;
+}
+
+.sidebar-link-icon { font-size: 16px; }
+.sidebar-link-label { flex: 1; }
+
+.sidebar-link-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* --- Main content area --- */
+.dashboard-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+
+/* ============================================================
+   4. GENERIC PAGE STYLES
+   ============================================================ */
+
+.page { max-width: 1200px; }
+
+.page-header { margin-bottom: 28px; }
+
+.page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  color: #a1a1aa;
+  font-size: 14px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #52525b;
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+}
+
+/* Panels and cards */
+.panel {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.panel-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #52525b;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* Pill badges */
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: lowercase;
+}
+.badge-todo    { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+.badge-meeting { background: rgba(6, 182, 212, 0.15);  color: #06B6D4; }
+.badge-note    { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+.badge-reminder{ background: rgba(124, 58, 237, 0.15); color: #7C3AED; }
+
+
+/* ============================================================
+   5. DASHBOARD HOME PAGE
+   ============================================================ */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.stat-card-tall { padding: 24px 20px; }
+
+.stat-label {
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+.task-row:last-child { border-bottom: none; }
+
+.task-check {
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+}
+.task-row.done .task-check { background: #10B981; border-color: #10B981; }
+.task-row.done .task-title { text-decoration: line-through; color: #52525b; }
+
+.task-title { flex: 1; font-size: 14px; }
+
+.meeting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.meeting-row:last-child { border-bottom: none; }
+
+.meeting-time {
+  font-size: 13px;
+  color: #a1a1aa;
+  width: 50px;
+}
+
+.meeting-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.meeting-info { flex: 1; }
+.meeting-title { font-size: 14px; font-weight: 500; }
+.meeting-meta { font-size: 12px; color: #52525b; }
+
+.meeting-join {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.meeting-join:hover { background: rgba(255, 255, 255, 0.1); }
+
+
+/* ============================================================
+   6. CALENDAR PAGE
+   ============================================================ */
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.calendar-month {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.calendar-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  color: #a1a1aa;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+.calendar-arrow:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+
+.calendar-toolbar { display: flex; align-items: center; gap: 8px; }
+
+.calendar-view-btn {
+  background: transparent;
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.calendar-view-btn:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+
+.calendar-new-btn { width: auto; padding: 8px 16px; font-size: 13px; }
+
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+
+.calendar-weekday {
+  font-size: 12px;
+  color: #a1a1aa;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.calendar-cell {
+  min-height: 100px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.calendar-cell:hover { background: rgba(255, 255, 255, 0.02); }
+.calendar-cell.other-month { color: #52525b; }
+.calendar-cell.other-month .calendar-date { color: #52525b; }
+
+.calendar-date {
+  display: inline-block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 24px;
+  border-radius: 50%;
+}
+.calendar-date.today { background: #7C3AED; color: white; font-weight: 600; }
+
+.calendar-event {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: white;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Slight transparency so the colored events read more softly */
+  opacity: 0.85;
+}
+
+
+/* ============================================================
+   7. ENTRY MODAL
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;                              /* shorthand for top:0; right:0; bottom:0; left:0 */
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-card {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title { font-size: 18px; font-weight: 600; }
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  font-size: 18px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+.modal-close:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+
+.entry-type-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.entry-type-tab {
+  background: rgba(255, 255, 255, 0.03);
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+.entry-type-tab:hover { background: rgba(255, 255, 255, 0.06); color: white; }
+.entry-type-tab.active {
+  background: #7C3AED;
+  color: white;
+  border-color: #7C3AED;
+}
+
+.entry-type-icon { font-size: 18px; }
+
+.modal-field { margin-bottom: 14px; display: block; }
+
+.modal-label {
+  display: block;
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-bottom: 6px;
+}
+
+.modal-textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+
+.modal-field-row { display: flex; gap: 12px; margin-bottom: 14px; }
+
+.color-picker { display: flex; gap: 8px; }
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.selected { border-color: white; }
+
+.toggle-row {
+  background: #0f0f11;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.modal-cancel, .modal-save { width: auto; padding: 10px 20px; }
+
+
+/* ============================================================
+   8. REMINDERS PAGE
+   ============================================================ */
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-pill {
+  background: transparent;
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.filter-pill:hover { background: rgba(255, 255, 255, 0.04); color: white; }
+.filter-pill.active {
+  background: #7C3AED;
+  color: white;
+  border-color: #7C3AED;
+}
+
+.reminder-card {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.reminder-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(124, 58, 237, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.reminder-body { flex: 1; }
+
+.reminder-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.reminder-description {
+  font-size: 13px;
+  color: #a1a1aa;
+  margin-bottom: 6px;
+}
+
+.reminder-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.reminder-actions { display: flex; gap: 6px; }
+
+.reminder-btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+.reminder-btn.snooze:hover { background: rgba(255, 255, 255, 0.05); }
+.reminder-btn.dismiss { color: #EF4444; border-color: rgba(239, 68, 68, 0.3); }
+.reminder-btn.dismiss:hover { background: rgba(239, 68, 68, 0.1); }
+
+
+/* ============================================================
+   9. EMAIL LOG PAGE
+   ============================================================ */
+
+.email-row {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.email-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.email-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.email-body { flex: 1; }
+
+.email-subject { font-size: 14px; font-weight: 500; }
+
+.email-meta { font-size: 12px; color: #a1a1aa; margin-top: 2px; }
+
+.email-time {
+  font-size: 12px;
+  color: #a1a1aa;
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   10. SETTINGS PAGE
+   ============================================================ */
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-nav-item {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.settings-nav-item:hover { background: rgba(255, 255, 255, 0.04); color: white; }
+.settings-nav-item.active {
+  background: rgba(124, 58, 237, 0.15);
+  color: #7C3AED;
+}
+.settings-nav-item.danger { color: #EF4444; }
+
+.settings-content-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.settings-row {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.settings-avatar-row { gap: 14px; }
+
+.settings-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.settings-avatar-info { flex: 1; }
+.settings-avatar-name { font-weight: 600; font-size: 15px; }
+.settings-avatar-email { color: #a1a1aa; font-size: 13px; }
+
+.settings-row-title { font-size: 14px; font-weight: 500; }
+.settings-row-sub { font-size: 12px; color: #a1a1aa; margin-top: 2px; }
+
+.settings-input { max-width: 280px; }
+
+
+/* ============================================================
+   11. SWITCH (toggle slider — used by Modal + Settings)
+   ============================================================ */
+
+/* The pattern: a hidden checkbox + a styled <span> that we move
+   based on the checkbox's :checked state. Pure CSS, no JS needed
+   for the visual. */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  inset: 0;
+  background: #3f3f46;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.switch input:checked + .switch-slider { background: #7C3AED; }
+.switch input:checked + .switch-slider::before { transform: translateX(18px); }
+
+
+/* ============================================================
+   12. NEW STYLES (loading, errors, empty states, etc.)
+   ============================================================ */
+
+/* --- Loading screen (shown while checking session) --- */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #7C3AED;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Small loading line (used inside pages while fetching) --- */
+.loading-inline {
+  color: #a1a1aa;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* --- Form error messages --- */
+.form-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #FCA5A5;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* --- Empty state panel --- */
+.empty-state {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.empty-state-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.empty-state-message {
+  font-size: 14px;
+  color: #a1a1aa;
+  margin-bottom: 20px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-state-action {
+  width: auto !important;
+  padding: 10px 20px !important;
+  margin: 0 auto;
+}
+
+/* --- Panel "no items inside" line --- */
+.panel-empty {
+  color: #52525b;
+  font-size: 13px;
+  padding: 16px 0;
+  text-align: center;
+}
+
+/* --- TopNav avatar dropdown --- */
+.topnav-avatar-wrap {
+  position: relative;
+}
+
+.topnav-menu {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  min-width: 220px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.topnav-menu-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.topnav-menu-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.topnav-menu-email {
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-top: 2px;
+}
+
+.topnav-menu-item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+.topnav-menu-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Notes grid --- */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.note-card {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.note-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.note-card-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.note-card-body {
+  font-size: 13px;
+  color: #a1a1aa;
+  flex: 1;
+  line-height: 1.5;
+  /* Limit to 4 lines with ellipsis */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.note-card-date {
+  font-size: 11px;
+  color: #52525b;
+}
+
+.note-card-delete {
+  background: transparent;
+  border: none;
+  color: #52525b;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 4px;
+}
+.note-card-delete:hover {
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* --- Slightly tweak the dashboard-main padding for empty pages --- */
+.dashboard-main .page {
+  padding-bottom: 40px;
+}
+
+
+/* ============================================================
+   13. CATEGORIES PAGE
+   ============================================================ */
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.category-card {
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.category-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.category-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.category-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.category-count {
+  font-size: 12px;
+  color: #a1a1aa;
+  margin-bottom: 12px;
+}
+
+.category-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-preview-item {
+  font-size: 12px;
+  color: #a1a1aa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-preview-more {
+  font-size: 11px;
+  color: #52525b;
+  margin-top: 4px;
+}
+
+
+/* ============================================================
+   14. TRASH PAGE
+   ============================================================ */
+
+.trash-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.trash-row:last-child { border-bottom: none; }
+
+.trash-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.trash-body { flex: 1; }
+
+.trash-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.trash-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #a1a1aa;
+}
+
+.trash-actions {
+  display: flex;
+  gap: 6px;
+}
+
+
+/* ============================================================
+   15. SETTINGS — additional styles for all tabs
+   ============================================================ */
+
+.settings-description {
+  font-size: 13px;
+  color: #a1a1aa;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.settings-color-picker {
+  display: flex;
+  gap: 8px;
+}
+
+/* Style the <select> dropdown to match the dark theme */
+.settings-content select.text-field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* Danger zone active state (red highlight) */
+.settings-nav-item.danger.active {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+}
