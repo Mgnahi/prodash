@@ -1,17 +1,26 @@
 // ============================================================
-// EntryModal.jsx — now sends emails via /api/send-email
+// EntryModal.jsx
 // ------------------------------------------------------------
-// After saving an entry to Supabase, if sendEmail is on, we:
-//   1. POST to /api/send-email (Vercel serverless function)
-//   2. Log the result to the email_log table in Supabase
+// On save, we now do TWO things (in addition to inserting/
+// updating the entry in Supabase):
 //
-// The email send is "fire and forget" — we don't block the
-// modal close on it. If it fails, the user sees a console
-// warning but the entry is already saved.
+//   1. Send an immediate "you saved this" confirmation email
+//      via POST /api/send-email. This gives the user instant
+//      feedback that the notification pipeline is working.
+//
+//   2. Schedule the 3 reminder emails (day-before, on-day,
+//      10-min-before) via scheduleEntryReminders(), which
+//      inserts rows into the scheduled_emails table. The
+//      Vercel cron at /api/cron-send-emails fires them later.
+//
+// When the user toggles "Send email" OFF, we cancel any
+// existing scheduled_emails rows for the entry so they
+// don't get surprise reminders.
 // ============================================================
 
 import { useState, useEffect } from "react";
 import { createEntry, updateEntry, todayString } from "../lib/entries";
+import { scheduleEntryReminders } from "../lib/scheduledEmails";
 import { supabase } from "../lib/supabase";
 
 const ENTRY_TYPES = [
@@ -35,6 +44,7 @@ export default function EntryModal({ isOpen, onClose, userId, defaults = {}, onS
   const [sendEmail, setSendEmail]     = useState(true);
   const [saving, setSaving]           = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [infoMessage, setInfoMessage]   = useState("");
 
   useEffect(() => {
     if (!isOpen) return;
@@ -57,12 +67,15 @@ export default function EntryModal({ isOpen, onClose, userId, defaults = {}, onS
       setSendEmail(true);
     }
     setErrorMessage("");
+    setInfoMessage("");
   }, [isOpen, defaults.editEntry, defaults.type, defaults.date]);
 
   if (!isOpen) return null;
 
   async function handleSave() {
     setErrorMessage("");
+    setInfoMessage("");
+
     if (!title.trim()) {
       setErrorMessage("Please enter a title.");
       return;
@@ -84,73 +97,116 @@ export default function EntryModal({ isOpen, onClose, userId, defaults = {}, onS
       ? await updateEntry(defaults.editEntry.id, payload)
       : await createEntry({ userId, ...payload, completed: false });
 
-    setSaving(false);
-
     if (result.error) {
+      setSaving(false);
       setErrorMessage(result.error.message);
       return;
     }
 
-    // --- Send email if toggled on (only for new entries) ---
-    // We do this AFTER closing the modal so the UI feels fast.
-    // The email send happens in the background.
-    if (sendEmail && !editing) {
-      sendEmailInBackground(result.data, userId);
-    }
+    const savedEntry = result.data;
 
-    onSaved?.();
-  }
-
-  // Fire-and-forget email send + logging
-  async function sendEmailInBackground(entry, userId) {
+    // ============================================================
+    // Notification side-effects (all fire-and-forget)
+    // ============================================================
+    // We do these AFTER the entry is confirmed saved in Supabase
+    // and BEFORE we close the modal, so:
+    //   - If the entry save failed, no stray emails get sent.
+    //   - If email side-effects fail, the entry is still saved.
+    //
+    // Two side-effects, both gated on the "Send email" toggle:
+    //
+    //   A. Immediate confirmation email — fires NOW via
+    //      /api/send-email. Gives the user instant feedback.
+    //
+    //   B. Scheduled reminders — inserts rows into
+    //      scheduled_emails for day-before / on-day /
+    //      10-min-before. The cron picks them up later.
+    //
+    // If the toggle is OFF, we cancel any existing scheduled
+    // emails so the user doesn't get surprise reminders later.
+    // ============================================================
     try {
-      // Get the user's email from Supabase auth
       const { data: { user } } = await supabase.auth.getUser();
       const userEmail = user?.email;
-      if (!userEmail) return;
 
-      const subject = `${type.charAt(0).toUpperCase() + type.slice(1)}: ${entry.title}`;
+      if (sendEmail && userEmail) {
+        // A. Immediate confirmation email
+        //    Don't await — we don't want a slow Resend response
+        //    to delay the modal close. Failures are silently
+        //    logged and (for visibility) shown via console.
+        const subject = `Saved: ${savedEntry.title}`;
+        fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: userEmail,
+            subject,
+            title: savedEntry.title,
+            description: savedEntry.description,
+            type: savedEntry.type,
+            date: savedEntry.date,
+            time: savedEntry.time,
+          }),
+        })
+          .then(async (response) => {
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              console.warn("Save-confirmation email failed:", result.error);
+            } else {
+              // Log the success to email_log so it shows up on
+              // the email log page alongside scheduled sends.
+              await supabase.from("email_log").insert({
+                user_id: userId,
+                entry_id: savedEntry.id,
+                status: "sent",
+                subject,
+              });
+            }
+          })
+          .catch((err) => {
+            console.warn("Save-confirmation email error:", err);
+            // Still log the failure
+            supabase.from("email_log").insert({
+              user_id: userId,
+              entry_id: savedEntry.id,
+              status: "failed",
+              subject,
+            });
+          });
 
-      // Call the serverless function
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: userEmail,
-          subject,
-          title: entry.title,
-          description: entry.description,
-          type: entry.type,
-          date: entry.date,
-          time: entry.time,
-          entryId: entry.id,
-          userId,
-        }),
-      });
+        // B. Scheduled reminders
+        const { scheduled } = await scheduleEntryReminders(savedEntry, userEmail);
+        console.log(`Scheduled ${scheduled} reminder email(s) for entry ${savedEntry.id}`);
 
-      const result = await response.json();
-
-      // Log to email_log table regardless of success/failure
-      await supabase.from("email_log").insert({
-        user_id: userId,
-        entry_id: entry.id,
-        status: result.status === "sent" ? "sent" : "failed",
-        subject,
-      });
-
-      if (!response.ok) {
-        console.warn("Email send failed:", result.error);
+        if (scheduled > 0 && !editing) {
+          setInfoMessage(
+            `Saved! Confirmation email sent + ${scheduled} reminder${scheduled === 1 ? "" : "s"} scheduled.`
+          );
+        }
+      } else if (!sendEmail) {
+        // User toggled email OFF — cancel any existing scheduled emails
+        await supabase
+          .from("scheduled_emails")
+          .delete()
+          .eq("entry_id", savedEntry.id);
+        console.log("Cancelled scheduled reminders (email toggle off)");
+      } else if (!userEmail) {
+        console.warn("No user email on file — cannot send or schedule emails.");
       }
     } catch (err) {
-      console.warn("Email send error:", err);
+      console.warn("Notification side-effects failed:", err);
+      // Don't block the modal close — the entry is already saved.
+    }
 
-      // Still log the failure
-      await supabase.from("email_log").insert({
-        user_id: userId,
-        entry_id: entry?.id,
-        status: "failed",
-        subject: `${type}: ${title}`,
-      });
+    setSaving(false);
+
+    // Brief pause so the user can read the info message,
+    // then close and refresh. If there's no info message,
+    // close immediately to match the existing fast-UX.
+    if (infoMessage) {
+      setTimeout(() => onSaved?.(), 1200);
+    } else {
+      onSaved?.();
     }
   }
 
@@ -244,8 +300,34 @@ export default function EntryModal({ isOpen, onClose, userId, defaults = {}, onS
           </label>
         </div>
 
+        <div style={{
+          fontSize: 12,
+          color: "#71717a",
+          marginTop: -8,
+          marginBottom: 12,
+          paddingLeft: 4,
+          lineHeight: 1.4,
+        }}>
+          You'll get a confirmation email immediately, plus reminders the day
+          before (9 AM), on the day, and 10 minutes before the time above.
+        </div>
+
         {errorMessage && (
           <div className="form-error" style={{ marginBottom: 12 }}>{errorMessage}</div>
+        )}
+
+        {infoMessage && (
+          <div style={{
+            background: "rgba(16, 185, 129, 0.1)",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            color: "#6EE7B7",
+            fontSize: 13,
+            padding: "10px 12px",
+            borderRadius: 8,
+            marginBottom: 12,
+          }}>
+            {infoMessage}
+          </div>
         )}
 
         <div className="modal-footer">
